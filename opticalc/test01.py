@@ -35,3 +35,7 @@ print(sph_calc73r)
 
 sph_calc01 = SpheriCalc(n1=1.0, n2=1.5, s1='inf', r=10)
 print(sph_calc01)
+
+# Test case when image lies in the focal plane
+sph_calc02 = SpheriCalc(n1=1.0, n2=1.5-1e-16, s2=30, r=10)
+print(sph_calc02)

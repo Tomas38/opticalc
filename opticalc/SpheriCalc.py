@@ -31,43 +31,95 @@ class SpheriCalc:
 
         # Compute the missing variable using rearranged equations
         if m == 'n1':
-            if r == 'inf':
+            if n2 < 1.0:
+                raise ValueError("n2 must be greater than or equal to 1.0.")
+            elif r == 'inf':
                 self.values['n1'] = n2 * s1 / s2
             elif s1 == 'inf':
                 self.values['n1'] = n2 - (n2 * r) / s2
             elif s2 == 'inf':
                 self.values['n1'] = (n2 * s1) / (-r + s1)
+            elif s1 == 0 or s2 == 0:
+                raise ValueError("Cannot compute n1 when s1 or s2 are zero.")
+            elif s1 == 'inf' and s2 == 'inf':
+                self.values['n1'] = n2
+            elif s1 == 'inf' and r == 'inf':
+                raise ValueError("Cannot compute n1 when both s1 and r are infinite.")
+            elif s2 == 'inf' and r == 'inf':
+                raise ValueError("Cannot compute n1 when both s2 and r are infinite.")
+            elif s1 == r:
+                raise ValueError("Cannot compute n1 when s1 equals r.")
+            elif s2 == r:
+                raise ValueError("Cannot compute n1 when s2 equals r.")
             else:
                 self.values['n1'] = (n2 * s1 * s2 - s1 * r * n2) / (s1 * s2 - r * s2)
         elif m == 'n2':
             print(s1)
-            if r == 'inf':
+            if n1 < 1.0:
+                raise ValueError("n1 must be greater than or equal to 1.0.")
+            elif r == 'inf':
                 self.values['n2'] = n1 * s2 / s1
             elif s1 == 'inf':
                 print('here')
                 self.values['n2'] = n1 * s2 / (-r + s2)
             elif s2 == 'inf':
                 self.values['n2'] = n1 - (n1 * r) / s1
+            elif s1 == 0 or s2 == 0:
+                raise ValueError("Cannot compute n2 when s1 or s2 are zero.")
+            elif s1 == 'inf' and s2 == 'inf':
+                self.values['n2'] = n1
+            elif s1 == 'inf' and r == 'inf':
+                raise ValueError("Cannot compute n2 when both s1 and r are infinite.")
+            elif s2 == 'inf' and r == 'inf':
+                raise ValueError("Cannot compute n2 when both s2 and r are infinite.")
+            elif s1 == r:
+                raise ValueError("Cannot compute n2 when s1 equals r.")
+            elif s2 == r:
+                raise ValueError("Cannot compute n2 when s2 equals r.")
             else:
                 print('there2')
                 self.values['n2'] = (s2 * r * n1 - n1 * s1 * s2) / (s1 * r - s1 * s2)
         elif m == 's1':
-            if r == 'inf':
+            if n1 < 1.0 or n2 < 1.0:
+                raise ValueError("n must be greater than or equal to 1.0.")
+            elif r == 'inf':
                 self.values['s1'] = n1 * s2 / n2
             elif s2 == 'inf':
                 self.values['s1'] = n1 * r / (n1 - n2)
+            elif n2*r == (n2 - n1)*s2:
+                self.values['s1'] = 'inf'
+            elif s2 == 'inf' and r == 'inf':
+                self.values['s1'] = 'inf'
             else:
                 self.values['s1'] = n1 * r * s2 / (n2 * r - (n2 - n1) * s2)
         elif m == 's2':
-            if r == 'inf':
+            if n1 < 1.0 or n2 < 1.0:
+                raise ValueError("n must be greater than or equal to 1.0.")
+            elif r == 'inf':
                 self.values['s2'] = n2 * s1 / n1
             elif s1 == 'inf':
                 self.values['s2'] = n2 * r / (n2 - n1)
+            elif n1*r == -(n2 - n1)*s1:
+                self.values['s2'] = 'inf'
+            elif s1 == 'inf' and r == 'inf':
+                self.values['s2'] = 'inf'
             else:
                 self.values['s2'] = n2 * r * s1 / ((n2 - n1) * s1 + n1 * r)
         elif m == 'r':
-            if n1 == n2:
-                raise ValueError("Cannot compute radius of curvature when n1 equals n2.")
+            if n1 < 1.0 or n2 < 1.0:
+                raise ValueError("n must be greater than or equal to 1.0.")
+            elif n1 == n2:
+                raise ValueError("Cannot compute r when n1 equals n2.")
+            elif s1 == 0.0 or s2 == 0.0:
+                raise ValueError("Cannot compute r when s1 or s2 are zero.")
+            elif s1 == 'inf':
+                self.values['r'] = (n2 - n1) * s2 / (n2)
+            elif s2 == 'inf':
+                self.values['r'] = - (n2 - n1) * s1 / (n1)
+            elif s1 == 'inf' and s2 == 'inf':
+                self.values['r'] = 'inf'
+            elif n2 * s1 == n1 * s2:
+                self.values['r'] = 'inf'
             else:
                 self.values['r'] = (n2 - n1) * s1 * s2 / (n2 * s1 - n1 * s2)
         
