@@ -19,10 +19,10 @@ class SpheriCalc:
                 elif self.values[k] == -np.inf or self.values[k] == '-inf':
                     self.values[k] = np.inf
                 # Convert values to float if not None
-                elif self.values[k] != None:
+                elif self.values[k] is not None:
                     self.values[k] = float(self.values[k])
-        except:
-            raise ValueError("All input values must be numeric or None.")
+        except Exception as e:
+            raise ValueError("All input values must be numeric or None.") from e
 
         # Ensure exactly one variable is missing
         missing = [k for k, v in self.values.items() if v is None]
