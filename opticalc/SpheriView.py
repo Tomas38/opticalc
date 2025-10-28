@@ -5,7 +5,10 @@ from line_interpolation import line_interpolate
 
 
 class SpheriView:
-    def __init__(self, spheri_calc):
+    def __init__(self):
+        pass
+
+    def __new__(self, spheri_calc):
         self.spheri_calc = spheri_calc
         self.n1 = self.spheri_calc.n1
         self.n2 = self.spheri_calc.n2
@@ -100,10 +103,15 @@ class SpheriView:
         #print(min(y1, y2) - 10, max(y1, y2) + 10)
         plt.axis('off')
         fig.tight_layout()
-        plt.show()
+        
+        return fig
+        #plt.show()
 
 class SpheriView2:
-    def __init__(self, spheri_calc):
+    def __init__(self):
+        pass
+
+    def __new__(self, spheri_calc):
         self.spheri_calc = spheri_calc
         self.n1 = self.spheri_calc.n1
         self.n2 = self.spheri_calc.n2
@@ -216,10 +224,14 @@ class SpheriView2:
         #print(min(y1, y2) - 10, max(y1, y2) + 10)
         plt.axis('off')
         fig.tight_layout()
-        plt.show()
+        #plt.show()
+
+        return fig
 
 if __name__ == "__main__":
     sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-50, r=-30)
     sph_calc01 = SpheriCalc(n1=1.0, n2=1.5, s1=25, r=-10)
-    SpheriView2(sph_calc01)
-    SpheriView(sph_calc01)
+    fig1 = SpheriView2(sph_calc01)
+    fig2 = SpheriView(sph_calc01)
+
+    plt.show()
