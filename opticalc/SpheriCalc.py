@@ -260,7 +260,7 @@ class SpheriCalc:
                         arrowprops=dict(color='tab:blue', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
         elif self.s1 > 0:
-            ax.plot([self.s1, self.s1], [0, y1], '--', color='tab:blue', lw=3)  # Object height
+            ax.plot([self.s1, self.s1], [0, y1], linestyle=(0, (1, 1)), color='tab:blue', lw=3)  # Object height
             ax.annotate('', xy=(self.s1, y1), xytext=(self.s1, 0),
                         arrowprops=dict(color='tab:blue', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
@@ -270,7 +270,7 @@ class SpheriCalc:
                         arrowprops=dict(color='tab:orange', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
         elif self.s2 < 0:
-            ax.plot([self.s2, self.s2], [0, y2], '--', color='tab:orange', lw=3)  # Image height
+            ax.plot([self.s2, self.s2], [0, y2], linestyle=(0, (1, 1)), color='tab:orange', lw=3)  # Image height
             ax.annotate('', xy=(self.s2, y2), xytext=(self.s2, 0),
                         arrowprops=dict(color='tab:orange', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
@@ -361,7 +361,7 @@ class SpheriCalc:
                                         width=0, headwidth=10, headlength=12))
             #ax.arrow(self.s1, 0, 0, y1, width=1, length_includes_head=True, color='tab:blue')
         elif self.s1 > 0:
-            ax.plot([self.s1, self.s1], [0, y1], '--', color='tab:blue', lw=3)  # Object height
+            ax.plot([self.s1, self.s1], [0, y1], linestyle=(0, (1, 1)), color='tab:blue', lw=3)  # Object height
             ax.annotate('', xy=(self.s1, y1), xytext=(self.s1, 0),
                         arrowprops=dict(color='tab:blue', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
@@ -371,7 +371,7 @@ class SpheriCalc:
                         arrowprops=dict(color='tab:orange', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
         elif self.s2 < 0:
-            ax.plot([self.s2, self.s2], [0, y2], '--', color='tab:orange', lw=3)  # Image height
+            ax.plot([self.s2, self.s2], [0, y2], linestyle=(0, (1, 1)), color='tab:orange', lw=3)  # Image height
             ax.annotate('', xy=(self.s2, y2), xytext=(self.s2, 0),
                         arrowprops=dict(color='tab:orange', lw=0, shrinkA=0, shrinkB=-2,
                                         width=0, headwidth=10, headlength=12))
@@ -423,7 +423,8 @@ class SpheriCalc:
 if __name__ == "__main__":
     #sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-50, r=-30)
     #sph_calc01 = SpheriCalc(n1=1.0, n2=1.5, s1=25, r=-10)
-    sph_calc01 = SpheriCalc(n1=1.5, n2=1.0, s1=-50, r=10)
+    sph_calc01 = SpheriCalc(n1=1.5, n2=1.0, s1=-20, r=-10)
+    sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-4, r=-3)
     print(sph_calc01)
     fig1 = sph_calc01.plot1()
     fig2 = sph_calc01.plot2()
