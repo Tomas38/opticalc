@@ -1,10 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from line_interpolation import line_interpolate
+from .utils import line_interpolate
 
 
 class SpheriCalc:
-    def __init__(self, *, n1=None, n2=None, s1=None, s2=None, r=None):
+    def __init__(self, *, n1, n2, s1, s2, r):
+        # Original idea: (self, *, n1=None, n2=None, s1=None, s2=None, r=None)
+        # But to avoid confusion, force user to always specify all except one variable
+        # Also Pylace gave many red warnings with default None values...
         self.values = {
             'n1': n1,
             'n2': n2,
@@ -325,6 +328,9 @@ class SpheriCalc:
         elif self.r < 0:
             surf_x = self.r + np.sqrt(self.r**2 - surf_y**2)
         
+        # Provide safe defaults so y1/y2 are always defined, then adjust based on beta
+        y1 = 10.0
+        y2 = self.beta * y1
         if np.abs(self.beta) < 1:
             y1 = y0 * 0.8
             y2 = self.beta * y1
@@ -418,14 +424,3 @@ class SpheriCalc:
         #plt.show()
 
         return fig
-
-# Example usage
-if __name__ == "__main__":
-    #sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-50, r=-30)
-    #sph_calc01 = SpheriCalc(n1=1.0, n2=1.5, s1=25, r=-10)
-    sph_calc01 = SpheriCalc(n1=1.5, n2=1.0, s1=-20, r=-10)
-    sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-4, r=-3)
-    print(sph_calc01)
-    fig1 = sph_calc01.plot1()
-    fig2 = sph_calc01.plot2()
-    plt.show()

@@ -1,10 +1,9 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from SpheriCalc import SpheriCalc
-from line_interpolation import line_interpolate
+from opticalc import SpheriCalc
+from opticalc.utils import line_interpolate
 
 
-sph_calc = SpheriCalc(n2=1.5, s1=-50, n1=1, r=30)
+sph_calc = SpheriCalc(n2=1.5, s1=-50, n1=1, r=30, s2=None)
 # print(sph_calc.q1)
 # print(sph_calc.q2)
 # print(sph_calc.f1)
@@ -15,7 +14,7 @@ sph_calc = SpheriCalc(n2=1.5, s1=-50, n1=1, r=30)
 # print(sph_calc)
 
 # sph_calc01 = SpheriCalc(n1=1.0, n2=1.5, s1=-35, r=10)
-sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-10, r=-30)
+sph_calc01 = SpheriCalc(n1=1.33, n2=1.0, s1=-10, r=-30, s2=None)
 print(sph_calc01)
 
 n1 = sph_calc01.n1
