@@ -1,0 +1,146 @@
+import numpy as np
+# import matplotlib.pyplot as plt
+# from .utils import line_interpolate
+
+
+class MirrorCalc:
+    def __init__(self, *, s1, s2, r):
+        self.values = {
+            's1': s1,
+            's2': s2,
+            'r': r,
+        }
+
+        try:
+            for k in self.values:
+                # Convert +-inf and inf strings to np.inf
+                if self.values[k] == np.inf or self.values[k] == 'inf' or self.values[k] == '+inf':
+                    self.values[k] = np.inf
+                elif self.values[k] == -np.inf or self.values[k] == '-inf':
+                    self.values[k] = np.inf
+                # Convert values to float if not None
+                elif self.values[k] is not None:
+                    self.values[k] = float(self.values[k])
+        except Exception as e:
+            raise ValueError("All input values must be numeric or None.") from e
+
+        # Ensure exactly one variable is missing
+        missing = [k for k, v in self.values.items() if v is None]
+        if len(missing) != 1:
+            raise ValueError("Exactly one variable must be missing (set to None).")
+
+        self.missing = missing[0]
+        s1 = self.values['s1']
+        s2 = self.values['s2']
+        r = self.values['r']
+
+        m = self.missing
+
+        # Compute the missing variable
+        if m == 's1':
+            if r == np.inf and s2 == np.inf:
+                self.values['s1'] = np.inf
+            elif r == np.inf:
+                self.values['s1'] = -s2
+            elif s2 == np.inf:
+                self.values['s1'] = r / 2
+            elif r == 2 * s2:
+                self.values['s1'] = np.inf
+            else:
+                self.values['s1'] = (s2 * r) / (2 * s2 - r)
+        elif m == 's2':
+            if r == np.inf and s1 == np.inf:
+                self.values['s2'] = np.inf
+            elif r == np.inf:
+                self.values['s2'] = -s1
+            elif s1 == np.inf:
+                self.values['s2'] = r / 2
+            elif r == 2 * s1:
+                self.values['s2'] = np.inf
+            else:
+                self.values['s2'] = (s1 * r) / (2 * s1 - r)
+        elif m == 'r':
+            if s1 == np.inf and s2 == np.inf:
+                self.values['r'] = np.inf
+            elif s1 == np.inf:
+                self.values['r'] = 2 * s2
+            elif s2 == np.inf:
+                self.values['r'] = 2 * s1
+            elif s1 == -s2:
+                self.values['r'] = np.inf
+            else:
+                self.values['r'] = (2 * s1 * s2) / (s1 + s2)
+        
+        self.s1 = self.values['s1']
+        self.s2 = self.values['s2']
+        self.r = self.values['r']
+
+        # Compute other related values
+        # Cases of f1 and f2
+        if self.r == np.inf:
+            self.f1 = np.inf
+            self.f2 = np.inf
+        else:
+            self.f1 = self.r / 2
+            self.f2 = self.r / 2
+        
+        # Cases of q1 and q2
+        if self.s1 == np.inf and self.s2 == np.inf:
+            self.q1 = np.inf
+            self.q2 = np.inf
+        elif self.f1 == np.inf and self.f2 == np.inf:
+            self.q1 = np.inf
+            self.q2 = np.inf
+        elif self.s1 == np.inf and self.s2 != np.inf:
+            self.q1 = np.inf
+            self.q2 = 0.0
+        elif self.s2 == np.inf and self.s1 != np.inf:
+            self.q1 = 0.0
+            self.q2 = np.inf
+        else:
+            self.q1 = self.s1 - self.f1
+            self.q2 = self.s2 - self.f2
+        
+        if self.s1 != np.inf and self.s2 != np.inf:
+            self.beta = - (self.s2 / self.s1)  # Lateral magnification
+            self.gamma = - (1 / self.beta)  # Angular magnification
+            self.alpha = - self.beta**2  # Axial magnification
+        elif self.s1 == np.inf and self.s2 != np.inf:
+            self.beta = 0.0
+            self.gamma = np.inf
+            self.alpha = 0.0
+        elif self.s1 != np.inf and self.s2 == np.inf:
+            self.beta = np.inf
+            self.gamma = 0.0
+            self.alpha = np.inf
+        #elif self.s1 == np.inf and self.s2 == np.inf:
+        #    self.beta = 0.0
+        #    self.gamma = np.inf
+        #    self.alpha = 0.0
+        else:
+            self.beta = np.nan
+            self.gamma = np.nan
+            self.alpha = np.nan
+
+    def get(self, var_name):
+        return self.values.get(var_name)
+
+    def __repr__(self):
+        return f"OpticalSystem({self.values})"
+    
+    def __str__(self):
+        # Spacing and precision
+        sp = 18
+        pr = 4
+        return (f"=== Spherical mirror ===\n"
+                f"s1:    {self.s1:{sp}.{pr}f}\n"
+                f"s2:    {self.s2:{sp}.{pr}f}\n"
+                f"r:     {self.r:{sp}.{pr}f}\n"
+                f"f1:    {self.f1:{sp}.{pr}f}\n"
+                f"f2:    {self.f2:{sp}.{pr}f}\n"
+                f"beta:  {self.beta:{sp}.{pr}f}\n"
+                f"gamma: {self.gamma:{sp}.{pr}f}\n"
+                f"alpha: {self.alpha:{sp}.{pr}f}\n"
+                f"q1:    {self.q1:{sp}.{pr}f}\n"
+                f"q2:    {self.q2:{sp}.{pr}f}\n"
+                f"=========================")
