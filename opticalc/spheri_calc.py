@@ -81,7 +81,6 @@ class SpheriCalc:
             else:
                 self.values['n1'] = (n2 * s1 * s2 - s1 * r * n2) / (s1 * s2 - r * s2)
         elif m == 'n2':
-            print(s1)
             if n1 < 1.0:
                 raise ValueError("n1 must be greater than or equal to 1.0.")
             elif s1 == np.inf and s2 == np.inf:
@@ -93,7 +92,6 @@ class SpheriCalc:
             elif r == np.inf:
                 self.values['n2'] = n1 * s2 / s1
             elif s1 == np.inf:
-                print('here')
                 self.values['n2'] = n1 * s2 / (-r + s2)
             elif s2 == np.inf:
                 self.values['n2'] = n1 - (n1 * r) / s1
@@ -104,7 +102,6 @@ class SpheriCalc:
             elif s2 == r:
                 raise ValueError("Cannot compute n2 when s2 equals r.")
             else:
-                print('there2')
                 self.values['n2'] = (s2 * r * n1 - n1 * s1 * s2) / (s1 * r - s1 * s2)
         elif m == 's1':
             if n1 < 1.0 or n2 < 1.0:
@@ -120,6 +117,7 @@ class SpheriCalc:
             elif n2*r == (n2 - n1)*s2:
                 self.values['s1'] = np.inf
             else:
+                # Includes n1 == n2 case
                 self.values['s1'] = n1 * r * s2 / (n2 * r - (n2 - n1) * s2)
         elif m == 's2':
             if n1 < 1.0 or n2 < 1.0:
@@ -135,6 +133,7 @@ class SpheriCalc:
             elif n1*r == -(n2 - n1)*s1:
                 self.values['s2'] = np.inf
             else:
+                # Includes n1 == n2 case
                 self.values['s2'] = n2 * r * s1 / ((n2 - n1) * s1 + n1 * r)
         elif m == 'r':
             if n1 < 1.0 or n2 < 1.0:
@@ -255,6 +254,8 @@ class SpheriCalc:
             ax.fill_between([0, xmax], ymin, ymax, color='tab:gray', alpha=0.2)
         elif self.n1 > self.n2:
             ax.fill_between([xmin, 0], ymin, ymax, color='tab:gray', alpha=0.2)
+        elif self.n1 == self.n2:
+            pass  # No shading needed
         #ax.axhline(0, color='black', linewidth=0.5)
         #ax.axvline(0, color='black', linewidth=0.5)
         if self.s1 < 0:
@@ -358,6 +359,8 @@ class SpheriCalc:
         elif self.n1 > self.n2:
             # ax.fill_between([xmin, 0], ymin, ymax, color='tab:gray', alpha=0.2)
             ax.fill_betweenx(surf_y, np.repeat(xmin, surf_y.shape), surf_x, color='tab:gray', alpha=0.2)
+        elif self.n1 == self.n2:
+            pass  # No shading needed
         #ax.axhline(0, color='black', linewidth=0.5)
         #ax.axvline(0, color='black', linewidth=0.5)
         if self.s1 < 0:
