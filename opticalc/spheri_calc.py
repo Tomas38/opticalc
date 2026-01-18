@@ -388,17 +388,18 @@ class SpheriCalc:
             ax.plot(*line_interpolate(self.s1, y1, self.r, 0, self.s1, 0), '-', color='black', lw=1) if self.s1 != self.r else None
             ax.plot(*line_interpolate(self.s1, y1, self.f1, 0, self.s1, 0), '-', color='black', lw=1) if self.s1 != self.f1 else None
         if self.s1 != np.inf and self.s2 != np.inf:
-            # SOLID lines from surface to right side (x=xmax)
+            # Real object:
+            # SOLID lines from surface to the right side (x=xmax)
             ax.plot(*line_interpolate(0, y1, self.f2, 0, 0, xmax), '-', color='black', lw=1) if self.f2 != 0 else None
             ax.plot(*line_interpolate(self.r, 0, self.s2, y2, 0, xmax), '-', color='black', lw=1) if self.s2 != self.r else None
             ax.plot([0, xmax], [y2, y2], '-', color='black', lw=1)
-        if self.s2 < 0 and self.s2 != np.inf:
+        if self.s2 < 0 and self.s1 != np.inf and self.s2 != np.inf:
             # Virtual image:
             # DASHED lines from surface (x=0) to image (x<0)
             ax.plot([self.s2, 0], [y2, y1], '--', color='black', lw=1) if self.s2 != 0 else None
             ax.plot([self.s2, 0], [y2, y2], '--', color='black', lw=1) if self.s2 != 0 else None
             ax.plot(*line_interpolate(self.s2, y2, self.r, 0, self.s2, 0), '--', color='black', lw=1) if self.s2 != self.r else None
-        if self.s1 > 0 and self.s1 != np.inf:
+        if self.s1 > 0 and self.s1 != np.inf and self.s2 != np.inf:
             # Virtual object:
             # SOLID lines from the left (x=xmin) to the surface (x=0)
             ax.plot([xmin, 0], [y1, y1], '-', color='black', lw=1)
@@ -409,15 +410,30 @@ class SpheriCalc:
             ax.plot(*line_interpolate(self.f1, 0, self.s1, y1, 0, self.s1), '--', color='black', lw=1) if self.s1 != self.f1 else None
             ax.plot(*line_interpolate(self.r, 0, self.s1, y1, 0, self.s1), '--', color='black', lw=1) if self.s1 != self.r else None
         if self.s1 == np.inf:
-            ax.plot([0, self.s2], [y2, y2], '-', color='black', lw=1)
+            if self.s2 > 0:
+                # Real image:
+                ax.plot([0, xmax], [y2, y2], '-', color='black', lw=1)
+                ax.plot(*line_interpolate(self.r, 0, self.s2, y2, xmax, 0), '-', color='black', lw=1) if self.s2 != self.r else None
+            if self.s2 < 0:
+                # Virtual image:
+                ax.plot([0, self.s2], [y2, y2], '--', color='black', lw=1)
+                ax.plot(*line_interpolate(self.r, 0, self.s2, y2, self.s2, 0), '--', color='black', lw=1) if self.s2 != self.r else None
+                # Rays after the surface:
+                ax.plot(*line_interpolate(self.r, 0, self.s2, y2, 0, xmax), '-', color='black', lw=1) if self.s2 != self.r else None
+                ax.plot([0, xmax], [y2, y2], '-', color='black', lw=1)
             ax.plot(*line_interpolate(0, y2, self.f1, 0, xmin, 0), '-', color='black', lw=1) if self.f1 != 0 else None
-            ax.plot(*line_interpolate(self.r, 0, self.s2, y2, self.s2, 0), '-', color='black', lw=1) if self.s2 != self.r else None
             ax.plot(*line_interpolate(self.r, 0, self.s2, y2, xmin, 0), '-', color='black', lw=1) if self.s2 != self.r else None
         if self.s2 == np.inf:
-            ax.plot([self.s1, 0], [y1, y1], '-', color='black', lw=1)
-            ax.plot(*line_interpolate(0, y1, self.f2, 0, 0, xmax), '-', color='black', lw=1) if self.f2 != 0 else None
-            ax.plot(*line_interpolate(self.r, 0, self.s1, y1, self.s1, 0), '-', color='black', lw=1) if self.s1 != self.r else None
+            if self.s1 > 0:
+                ax.plot([xmin, 0], [y1, y1], '-', color='black', lw=1)
+                ax.plot([0, self.s1], [y1, y1], '--', color='black', lw=1)
+                ax.plot(*line_interpolate(self.r, 0, self.s1, y1, self.s1, 0), '--', color='black', lw=1) if self.s1 != self.r else None
+                ax.plot(*line_interpolate(self.r, 0, self.s1, y1, xmin, 0), '-', color='black', lw=1) if self.s1 != self.r else None
+            if self.s1 < 0:
+                ax.plot([self.s1, 0], [y1, y1], '-', color='black', lw=1)
+                ax.plot(*line_interpolate(self.r, 0, self.s1, y1, self.s1, 0), '-', color='black', lw=1) if self.s1 != self.r else None
             ax.plot(*line_interpolate(self.r, 0, self.s1, y1, 0, xmax), '-', color='black', lw=1) if self.s1 != self.r else None
+            ax.plot(*line_interpolate(0, y1, self.f2, 0, 0, xmax), '-', color='black', lw=1) if self.f2 != 0 else None
 
         # Drawing points
         if self.f1 != np.inf and self.f1 > xmin and self.f1 < xmax:
